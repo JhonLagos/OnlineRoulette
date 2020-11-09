@@ -1,6 +1,6 @@
 ﻿namespace OnlineRoulette.Models.Enums
 {
-    public enum RouletteStatus
+    public enum StatusRoulette
     {
         Closed = 0,
         Open = 1

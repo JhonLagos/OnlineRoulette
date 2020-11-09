@@ -7,7 +7,7 @@ namespace OnlineRoulette.Repositories
 {
     public interface IRouletteRepository
     {
-        Task AddOrUpdateRouletteAsync(Roulette roulette);
+        Task SaveRouletteAsync(Roulette roulette);
 
         Task<Roulette> GetRouletteByIdAsync(string rouletteId);
 

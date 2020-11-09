@@ -18,7 +18,7 @@ namespace OnlineRoulette.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task AddOrUpdateRouletteAsync(Roulette roulette)
+        public async Task SaveRouletteAsync(Roulette roulette)
         {
             await _context.Redis.HashSetAsync(_keyHashRoulettes, roulette.Id, JsonConvert.SerializeObject(roulette));
         }

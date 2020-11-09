@@ -2,7 +2,6 @@
 using OnlineRoulette.Models;
 using OnlineRoulette.Services;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -26,7 +25,7 @@ namespace OnlineRoulette.Controllers
 
         [Route("{rouletteId}/open")]
         [HttpPut]
-        public async Task<ResultWrapper> OpenRouletteAsync(string rouletteId)
+        public async Task<IResultWrapper> OpenRouletteAsync([FromRoute]string rouletteId)
         {
             try
             {
@@ -34,7 +33,36 @@ namespace OnlineRoulette.Controllers
             }
             catch (Exception)
             {
-                return new ResultWrapper(true);
+                return new ResultWrapper(error: true);
+            }
+        }
+
+        [Route("{rouletteId}/bet")]
+        [HttpPost]
+        public async Task<IResultWrapper> PlaceBetAsync([FromHeader(Name = "user-id")] string userId, [FromRoute]string rouletteId, [FromBody]Bet bet)
+        {
+            try
+            {
+                bet.UserId = userId;
+                return await _service.PlaceBetAsync(rouletteId: rouletteId, bet: bet);
+            }
+            catch (Exception)
+            {
+                return new ResultWrapper(error: true);
+            }
+        }
+
+        [Route("{rouletteId}/close")]
+        [HttpPut]
+        public async Task<IResultGenericWrapper<ResultRoulette>> CloseRouletteAsync([FromRoute]string rouletteId)
+        {
+            try
+            {
+                return await _service.CloseRouletteAsync(rouletteId: rouletteId);
+            }
+            catch (Exception)
+            {
+                return new ResultGenericWrapper<ResultRoulette>(error: true, message: "Error");
             }
         }
 

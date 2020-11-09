@@ -8,7 +8,11 @@ namespace OnlineRoulette.Services
     {
         Task<Roulette> CreateRouletteAsync();
 
-        Task<ResultWrapper> OpenRouletteAsync(string rouletteId);
+        Task<IResultWrapper> OpenRouletteAsync(string rouletteId);
+
+        Task<IResultWrapper> PlaceBetAsync(string rouletteId, Bet bet);
+
+        Task<IResultGenericWrapper<ResultRoulette>> CloseRouletteAsync(string rouletteId);
 
         Task<IEnumerable<Roulette>> GetAllRoulettesAsync();
     }
