@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OnlineRoulette.Repositories;
+using OnlineRoulette.Services;
+using StackExchange.Redis;
 
 namespace OnlineRoulette
 {
@@ -18,6 +21,17 @@ namespace OnlineRoulette
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                   builder => builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader());
+            });
+            services.AddSingleton<IConnectionMultiplexer>(x => ConnectionMultiplexer.Connect(Configuration.GetValue<string>("RedisConnection")));
+            services.AddScoped<IOnlineRouletteContext, OnlineRouletteContext>();
+            services.AddScoped<IRouletteRepository, RouletteRepository>();
+            services.AddScoped<IRouletteService, RouletteService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -32,13 +46,7 @@ namespace OnlineRoulette
             {
                 endpoints.MapControllers();
             });
-            app.UseCors(cors =>
-            {
-                cors.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials();
-            });
+            app.UseCors("CorsPolicy");
         }
     }
 }
